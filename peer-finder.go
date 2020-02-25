@@ -54,6 +54,8 @@ func lookup(svcName string) (sets.String, error) {
 	for _, srvRecord := range srvRecords {
 		// The SRV records ends in a "." for the root domain
 		ep := fmt.Sprintf("%v", srvRecord.Target[:len(srvRecord.Target)-1])
+		ips, _ := net.LookupIP(ep)
+		log.Printf("%s - %v", ep, ips)
 		endpoints.Insert(ep)
 	}
 	return endpoints, nil
@@ -80,6 +82,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to get hostname: %s", err)
 	}
+
+	// Prefer Pod Name over hostname.
+	// Reason: hostname and pod name will be different when using hostNetworking. DNS will fail.
+	val, ok := os.LookupEnv("POD_NAME")
+	if ok && val != hostname {
+		hostname = val
+	}
+
 	var domainName string
 
 	// If domain is not provided, try to get it from resolv.conf
