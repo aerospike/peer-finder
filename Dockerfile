@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM k8s.gcr.io/ubuntu-slim:0.2
+FROM k8s.gcr.io/ubuntu-slim:0.2@sha256:f5bc17465946ceb3e0630e72f35fdf007ba84d4409e08838373bf7b102d6ef6b
 MAINTAINER Prashanth.B <beeps@google.com>
 
 RUN apt-get update && apt-get install -y wget bash dnsutils
